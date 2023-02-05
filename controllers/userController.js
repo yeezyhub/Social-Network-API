@@ -3,9 +3,9 @@ const { User, Thought } = require('../models');
 
 module.exports = {
 
-    //routes for /api/users
+    //Routes for /api/users
 
-    // Get all users
+    //Get all users
     getUsers(req, res) {
         User.find()
             .then(async (users) => {
@@ -19,7 +19,7 @@ module.exports = {
                 return res.status(500).json(err);
             });
     },
-    // Get a single user
+    //Get a single user
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
             .select('-__v')
@@ -27,7 +27,7 @@ module.exports = {
             .populate("Friend")
             .then(async (user) =>
                 !user
-                    ? res.status(404).json({ message: 'No user with that ID' })
+                    ? res.status(404).json({ message: 'No user with that ID.' })
                     : res.json(user)
             )
             .catch((err) => {
@@ -35,14 +35,14 @@ module.exports = {
                 return res.status(500).json(err);
             });
     },
-    // create a new user
+    //Create a new user
     createUser(req, res) {
         User.create(req.body)
             .then((user) => res.json(user))
             .catch((err) => res.status(500).json(err));
     },
 
-    //update a user
+    //Update a user
     updateUser(req, res) {
         User.findByIdAndUpdate(
             { _id: req.params.userId },
@@ -76,8 +76,9 @@ module.exports = {
             });
     },
 
-    //routes for /api/users/:userId/friends/:friendId
+    //Routes for /api/users/:userId/friends/:friendId
 
+    //Create friend
     createFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
@@ -94,6 +95,7 @@ module.exports = {
             .catch((error) => res.status(500).json(error));
     },
 
+    //Delete friend
     deleteFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
