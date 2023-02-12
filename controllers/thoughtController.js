@@ -112,18 +112,27 @@ module.exports = {
     async deleteReaction(req, res) {
         try {
             // Find the thought
-            const thought = await Thought.findById(ObjectId(req.params.thoughtId));
+            const thought = await Thought.findOneAndUpdate({
+                _id: req.params.thoughtId
+            },
+                {
+                    $pull: { reactions: {
+                        reactionId: req.params.reactionId
+                    } },
+                },
+                { runValidators: true, new: true}
+                );
 
-            // Get the reaction you want to delete
-            const result = thought.reactions.find(
-                (reaction) => reaction.reactionId == req.params.reactionId
-            );
+            // // Get the reaction you want to delete
+            // const result = thought.reactions.find(
+            //     (reaction) => reaction.reactionId == req.params.reactionId
+            // );
 
-            // Delete the reaction from the reactions array
-            thought.reactions.remove(result);
+            // // Delete the reaction from the reactions array
+            // thought.reactions.remove(result);
 
-            // Save the thought
-            thought.save();
+            // // Save the thought
+            // thought.save();
 
             res.json(thought);
         } catch (err) {

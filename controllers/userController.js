@@ -23,8 +23,8 @@ module.exports = {
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
             .select('-__v')
-            .populate("Thought")
-            .populate("Friend")
+            .populate("thoughts")
+            .populate("friends")
             .then(async (user) =>
                 !user
                     ? res.status(404).json({ message: 'No user with that ID.' })
@@ -68,7 +68,7 @@ module.exports = {
                     : Thought.deleteMany({ username: user.username })
             )
             .then(() =>
-                response.json({ message: 'User and thoughts have been deleted.' })
+                res.json({ message: 'User and thoughts have been deleted.' })
             )
             .catch((err) => {
                 console.log(err);
@@ -82,7 +82,7 @@ module.exports = {
     createFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
-            { $addToSet: { friends: req.body } },
+            { $addToSet: { friends: req.params.friendId } },
             { runValidators: true, new: true }
         )
             .then((user) =>
