@@ -10,6 +10,7 @@ const {
     deleteReaction,
 } = require("../../controllers/thoughtController");
 
+//Routes for accessing the thoughts and reactions to the thoughts
 router.route("/").get(getThoughts);
 router.route("/").post(createThought);
 

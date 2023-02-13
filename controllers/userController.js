@@ -78,7 +78,7 @@ module.exports = {
 
     //Routes for /api/users/:userId/friends/:friendId
 
-    //Create friend
+    //Create a friend
     createFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },

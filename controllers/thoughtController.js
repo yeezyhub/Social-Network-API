@@ -17,6 +17,7 @@ module.exports = {
 
     // Get a single thought
     getSingleThought(req, res) {
+        //Req.params to access the database using URL
         Thought.findById(ObjectId(req.params.thoughtId))
             .then((thought) =>
                 !thought
@@ -28,9 +29,10 @@ module.exports = {
 
     // Create a thought
     createThought(req, res) {
+        //Req.body to access database using user input to the JSON body
         Thought.create(req.body)
             .then(async function (thought) {
-                // Update User's thought array
+                // Update thought array
                 await User.findOneAndUpdate(
                     { username: req.body.username },
                     { $addToSet: { thoughts: ObjectId(thought._id) } },
@@ -116,23 +118,14 @@ module.exports = {
                 _id: req.params.thoughtId
             },
                 {
-                    $pull: { reactions: {
-                        reactionId: req.params.reactionId
-                    } },
+                    $pull: {
+                        reactions: {
+                            reactionId: req.params.reactionId
+                        }
+                    },
                 },
-                { runValidators: true, new: true}
-                );
-
-            // // Get the reaction you want to delete
-            // const result = thought.reactions.find(
-            //     (reaction) => reaction.reactionId == req.params.reactionId
-            // );
-
-            // // Delete the reaction from the reactions array
-            // thought.reactions.remove(result);
-
-            // // Save the thought
-            // thought.save();
+                { runValidators: true, new: true }
+            );
 
             res.json(thought);
         } catch (err) {
